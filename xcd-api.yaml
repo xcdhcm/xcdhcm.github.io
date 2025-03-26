@@ -31,15 +31,49 @@ paths:
                     - xcdio__Leave_Category__c: "Annual Leave"
                       xcdio__Employee_Details__c: "a29Q1000000t6zFIAQ"
                       xcdio__Start_Date__c: "2025-01-10"
+                      xcdio__Start_Date_AM_PM_All_Day__c: "All Day"
                       xcdio__End_Date__c: "2025-01-12"
-                    - xcdio__Leave_Category__c: "Annual Leave"
+                      xcdio__End_Date_AM_PM_All_Day__c: "All Day"
+                    - xcdio__Leave_Category__c: "TOIL"
+                      xcdio__Employee_Details__c: "a29Q1000000t6zFIAQ"
+                      xcdio__Start_Date__c: "2025-01-17"
+                      xcdio__Start_Date_AM_PM_All_Day__c: "All Day"
+                      xcdio__End_Date__c: "2025-01-17"
+                    - xcdio__Leave_Category__c: "Compassionate"
+                      xcdio__Employee_Details__c: "a29Q1000000t6zFIAQ"
+                      xcdio__Start_Date__c: "2025-01-17"
+                      xcdio__Start_Date_AM_PM_All_Day__c: "All Day"
+                      xcdio__End_Date__c: "2025-01-17"
+                      xcdio__End_Date_AM_PM_All_Day__c: "All Day"
+                    - xcdio__Leave_Category__c: "Religious Holiday"
                       xcdio__Employee_Details__c: "a29Q1000000t6zFIAQ"
                       xcdio__Start_Date__c: "2025-02-05"
                       xcdio__Start_Date_AM_PM_All_Day__c: "All Day"
                       xcdio__End_Date__c: "2025-02-06"
-                      xcdio__End_Date_AM_PM_All_Day__c: "All Day"
-                      xcdio__Number_of_days_of_holidays__c: 2.5
+                      xcdio__End_Date_AM_PM_All_Day__c: "AM"
+                      xcdio__Number_of_days_of_holidays__c: 1.5
                       xcdio__Notes__c: "Holiday for Flexible Working Days Employee"
+                    - xcdio__Leave_Category__c: "Study Leave"
+                      xcdio__Employee_Details__c: "a29Q1000000t6zFIAQ"
+                      xcdio__Start_Date__c: "2025-02-05"
+                      xcdio__Start_Date_AM_PM_All_Day__c: "PM"
+                      xcdio__End_Date__c: "2025-02-06"
+                      xcdio__End_Date_AM_PM_All_Day__c: "All Day"
+                      xcdio__Hours_booked_hh__c: 10
+                      xcdio__mm__c: "30"
+                      xcdio__Notes__c: "Leave for Irresgular Shift Pattern Employee"
+                    - xcdio__Leave_Category__c: "Jury Duty"
+                      xcdio__Employee_Details__c: "a29Q1000000t6zFIAQ"
+                      xcdio__Start_Date__c: "2025-03-10"
+                      xcdio__Start_Date_AM_PM_All_Day__c: "AM"
+                      xcdio__End_Date__c: "2025-03-10"
+                      xcdio__End_Date_AM_PM_All_Day__c: "AM"
+                    - xcdio__Leave_Category__c: "Business Travel"
+                      xcdio__Employee_Details__c: "a29Q1000000t6zFIAQ"
+                      xcdio__Start_Date__c: "2025-03-24"
+                      xcdio__Start_Date_AM_PM_All_Day__c: "All Day"
+                      xcdio__End_Date__c: "2025-03-24"
+                      xcdio__End_Date_AM_PM_All_Day__c: "All Day"
                   response_fields: "xcdio__Leave_Request__c"
                   asynchronous: "false"
                   allOrNone: "true"
@@ -61,6 +95,7 @@ paths:
                       xcdio__Number_of_days_of_holidays__c: 2
                       xcdio__Illness__c: "Infection"
                       xcdio__Industrial_Injury__c: false
+                      xcdio__Notes__c: "Sick leave for Flexible Working Days or Irregular Shift Pattern Employee"
                   response_fields: "xcdio__Leave_Request__c"
                   asynchronous: "false"
                   allOrNone: "true"
@@ -374,84 +409,6 @@ components:
           default: true
           description: Allow partial leave records to be created if one or more records in the array have validation errors.
           
-    BookLeaveRecordDetail:
-      type: object
-      required:
-        - xcdio__Leave_Category__c
-      properties:
-        xcdio__Leave_Category__c:
-          type: string
-          enum:
-            - Annual Leave
-            - Sick Leave
-            - TOIL
-            - Compassionate
-          description: The category of leave defined in XCD HRMS.
-          example: Annual Leave
-        xcdio__Employee_Details__c:
-          type: string
-          description: Salesforce record ID of the employee for whom the leave is to be booked.
-          example: a29Q1000000t6zFIAQ
-        xcdio__Start_Date__c:
-          type: string
-          format: date
-          description: Leave start date.
-          example: '2025-01-10'
-        xcdio__Start_Date_AM_PM_All_Day__c:
-          type: string
-          enum:
-            - AM
-            - PM
-            - All Day
-          description: Leave start slot.
-          example: All Day for a full day, or PM if the leave starts from the second half of the day.
-        xcdio__End_Date__c:
-          type: string
-          format: date
-          description: Leave end date.
-          example: '2025-01-10'
-        xcdio__End_Date_AM_PM_All_Day__c:
-          type: string
-          enum:
-            - AM
-            - PM
-            - All Day
-          description: Leave end slot.
-          example: All Day for a full day, or AM if the leave is until the first half of the day.
-        xcdio__Illness__c:
-          type: string
-          enum:
-            - Back & neck
-            - Chest & respiratory
-            - Covid-19 confirmed
-            - Covid-19 suspected
-            - Covid-19 self-isolating
-            - Diabetes
-            - Eyes, ear, nose, mouth
-            - Genito-urinary
-            - Heart
-            - Infection
-            - Musculo-skeletal
-            - Neurological
-            - Pregnancy
-            - Stomach
-            - Stress
-            - Other
-          description: Applicable for sickness only. The enum values may vary depending on client customizations.
-          example: Other
-        xcdio__Expected_return_to_work_date__c:
-          type: string
-          format: date
-          description: Expected reurn to work date. Applicable for sickness only.
-          example: '2025-01-10'
-        xcdio__Industrial_injury__c:
-          type: string
-          format: boolean
-          description: Industrial Injury. Applicable for sickness only.
-          example: false
-        xcdio__Notes__c:
-          type: string
-          description: Leave Notes.
     BookAnnualLeaveRecordDetail:
       type: object
       required:
