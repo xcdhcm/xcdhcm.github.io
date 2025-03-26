@@ -31,16 +31,15 @@ paths:
                     - xcdio__Leave_Category__c: "Annual Leave"
                       xcdio__Employee_Details__c: "a29Q1000000t6zFIAQ"
                       xcdio__Start_Date__c: "2025-01-10"
-                      xcdio__Start_Date_AM_PM_All_Day__c: "All Day"
                       xcdio__End_Date__c: "2025-01-12"
-                      xcdio__End_Date_AM_PM_All_Day__c: "All Day"
                     - xcdio__Leave_Category__c: "Annual Leave"
                       xcdio__Employee_Details__c: "a29Q1000000t6zFIAQ"
                       xcdio__Start_Date__c: "2025-02-05"
                       xcdio__Start_Date_AM_PM_All_Day__c: "All Day"
                       xcdio__End_Date__c: "2025-02-06"
                       xcdio__End_Date_AM_PM_All_Day__c: "All Day"
-                      xcdio__Notes__c: "Holiday"
+                      xcdio__Number_of_days_of_holidays__c: 2.5
+                      xcdio__Notes__c: "Holiday for Flexible Working Days Employee"
                   response_fields: "xcdio__Leave_Request__c"
                   asynchronous: "false"
                   allOrNone: "true"
@@ -59,11 +58,76 @@ paths:
                       xcdio__Start_Date__c: "2025-02-05"
                       xcdio__Start_Date_AM_PM_All_Day__c: "All Day"
                       xcdio__Expected_return_to_work_date__c: "2025-02-7"
+                      xcdio__Number_of_days_of_holidays__c: 2
                       xcdio__Illness__c: "Infection"
+                      xcdio__Industrial_Injury__c: false
                   response_fields: "xcdio__Leave_Request__c"
                   asynchronous: "false"
                   allOrNone: "true"
-              
+              Unpaid Leave:
+                value:
+                  records:
+                    - xcdio__Leave_Category__c: "Unpaid Leave"
+                      xcdio__Employee_Details__c: "a29Q1000000t6zFIAQ"
+                      xcdio__Start_Date__c: "2025-01-10"
+                    - xcdio__Leave_Category__c: "Unpaid Leave"
+                      xcdio__Employee_Details__c: "a29Q1000000t6zFIAQ"
+                      xcdio__Start_Date__c: "2025-02-05"
+                      xcdio__Start_Date_AM_PM_All_Day__c: "All Day"
+                      xcdio__End_Date__c: "2025-02-06"
+                      xcdio__End_Date_AM_PM_All_Day__c: "All Day"
+                      xcdio__Hours_booked_hh__c: 8
+                      xcdio__mm__c: "30"
+                      xcdio__Notes__c: "Unpaid Leave for Flexible Working Days Employee"
+                  response_fields: "xcdio__Leave_Request__c"
+                  asynchronous: "false"
+                  allOrNone: "true"
+              Appointment/Flex-leave:
+                value:
+                  records:
+                    - xcdio__Leave_Category__c: "Appointment"
+                      xcdio__Employee_Details__c: "a0WPt000001QTQnMAO"
+                      xcdio__Date__c: "2024-10-04"
+                      xcdio__AM_PM_All_Day__c: "PM"
+                      xcdio__Number_of_Holiday_Hours__c: 2.5
+                    - xcdio__Leave_Category__c: "Flex-leave"
+                      xcdio__Employee_Details__c: "a0WPt000001QTKLMA4"
+                      xcdio__Date__c: "2024-10-04"
+                      xcdio__Number_of_Holiday_Hours__c: 6
+                  response_fields: "xcdio__Leave_Request__c"
+                  asynchronous: "false"
+                  allOrNone: "true"
+              Parenting Leave:
+                value:
+                  records:
+                    - xcdio__Leave_Category__c: "Paternity"
+                      xcdio__Employee_Details__c: "a0WPt000001QOanMAG"
+                    - xcdio__Leave_Category__c: "Parental Bereavement"
+                      xcdio__Employee_Details__c: "a0WPt000001QTKLMA4"
+                      xcdio__Start_Date__c: "2024-07-04"
+                      xcdio__End_Date__c: "2024-10-11"
+                      xcdio__Bereavement_date__c: "2024-10-04"
+                    - xcdio__Leave_Category__c: "Adoption Paternity"
+                      xcdio__Employee_Details__c: "a0WPt000001QTKLMA4"
+                      xcdio__Start_Date__c: "2024-10-04"
+                      xcdio__End_Date__c: "2024-10-11"
+                      xcdio__Matching_date__c: "2024-10-04"
+                      xcdio__Expected_placement_date__c: "2024-10-07"
+                      xcdio__Placement_date__c: "2024-10-07"
+                    - xcdio__Leave_Category__c: "Shared Parental"
+                      xcdio__Employee_Details__c: "a0WPt000001QTQnMAO"
+                      xcdio__Start_Date__c: "2024-10-04"
+                      xcdio__End_Date__c: "2024-10-11"
+                      xcdio__Birth_due_date__c: "2024-10-04"
+                      xcdio__Baby_born_date__c: "2024-10-04"
+                      xcdio__Partners_name__c: "Jason"
+                      xcdio__Partners_last_name__c: "Todd"
+                      xcdio__Partners_middle_name__c: "Peter"
+                      xcdio__Partners_national_insurance_number__c: "JS123456B"
+                      xcdio__Declaration_received_from_partner__c: true
+                  response_fields: "xcdio__Leave_Request__c"
+                  asynchronous: "false"
+                  allOrNone: "true"
         required: true
       responses:
         '200':
@@ -287,7 +351,14 @@ components:
           type: array
           description: Array of leave request records to be created, as described in the BookLeaveRecordDetail schema. Every XCD API has a threshold number of records that can be passed in a single synchronous request, defined in the "XCD Integration API" custom metadata. The number of records in an asynchronous request can be up to 10,000.
           items:
-            $ref: '#/components/schemas/BookLeaveRecordDetail' 
+            oneOf:
+              - $ref: '#/components/schemas/BookAnnualLeaveRecordDetail'
+              - $ref: '#/components/schemas/BookSickLeaveRecordDetail'
+              - $ref: '#/components/schemas/BookUnpaidLeaveRecordDetail'
+              - $ref: '#/components/schemas/BookAppointmentFlexleaveLeaveRecordDetail'
+              - $ref: '#/components/schemas/BookParentalLeaveRecordDetail'
+            discriminator:
+              propertyName: xcdio__Leave_Category__c
         response_fields:
           type: string
           description: Comma-separated list of fields in the API object. Any new field can be added to the API object and dynamically queried using this field.
@@ -305,12 +376,16 @@ components:
           
     BookLeaveRecordDetail:
       type: object
+      required:
+        - xcdio__Leave_Category__c
       properties:
         xcdio__Leave_Category__c:
           type: string
           enum:
             - Annual Leave
             - Sick Leave
+            - TOIL
+            - Compassionate
           description: The category of leave defined in XCD HRMS.
           example: Annual Leave
         xcdio__Employee_Details__c:
@@ -377,6 +452,385 @@ components:
         xcdio__Notes__c:
           type: string
           description: Leave Notes.
+    BookAnnualLeaveRecordDetail:
+      type: object
+      required:
+        - xcdio__Leave_Category__c
+        - xcdio__Employee_Details__c
+        - xcdio__Start_Date__c
+        - xcdio__End_Date__c
+      properties:
+        xcdio__Leave_Category__c:
+          type: string
+          enum:
+            - Annual Leave
+            - TOIL
+            - Compassionate
+            - Emergency Leave for Dependants
+            - Jury Service
+            - Religious Holiday
+            - Study Leave
+            - Other Paid Leave
+            - Sabbatical
+            - Business Travel
+            - Conference / Seminar
+            - Training
+            - Working from Home
+            - Working Weekends
+            - Special Forces
+            - Strike
+            - Special Paid Leave
+          description: The category of leave defined in XCD HRMS.
+          example: Annual Leave
+        xcdio__Employee_Details__c:
+          type: string
+          description: Salesforce record ID of the employee for whom the leave is to be booked.
+          example: a29Q1000000t6zFIAQ
+        xcdio__Start_Date__c:
+          type: string
+          format: date
+          description: Leave start date.
+          example: '2025-01-08'
+        xcdio__Start_Date_AM_PM_All_Day__c:
+          type: string
+          enum:
+            - AM
+            - PM
+            - All Day
+          description: Leave start slot.
+          default: All Day
+          example: All Day for a full day, or PM if the leave starts from the second half of the day.
+        xcdio__End_Date__c:
+          type: string
+          format: date
+          description: Leave end date.
+          example: '2025-01-10'
+        xcdio__End_Date_AM_PM_All_Day__c:
+          type: string
+          enum:
+            - AM
+            - PM
+            - All Day
+          description: Leave end slot.
+          default: All Day
+          example: All Day for a full day, or AM if the leave is until the first half of the day.
+        xcdio__Number_of_days_of_holidays__c:
+          type: number
+          format: float
+          description: Leave duration in days. Mandatory while booking leave for an employee with Flexible Working Days.
+          example: 2.5
+        xcdio__Hours_booked_hh__c:
+          type: integer
+          description: Hour part of Leave duartion measured in hours and minutes. Mandatory while booking leave for an employee with Irregular Shift Pattern.
+          example: 2
+        xcdio__mm__c:
+          type: string
+          enum:
+            - '00'
+            - '05'
+            - '10'
+            - '15'
+            - '20'
+            - '25'
+            - '30'
+            - '35'
+            - '40'
+            - '45'
+            - '50'
+            - '55'
+          description: Minute part of Leave duartion measured in hours and minutes. Mandatory while booking leave for an employee with Irregular Shift Pattern.
+          default: '00'
+          example: '30'
+        xcdio__Notes__c:
+          type: string
+          description: Leave Notes.
+          default: '---'
+    BookSickLeaveRecordDetail:
+      type: object
+      required:
+        - xcdio__Leave_Category__c
+        - xcdio__Employee_Details__c
+        - xcdio__Start_Date__c
+        - xcdio__Illness__c
+      properties:
+        xcdio__Leave_Category__c:
+          type: string
+          enum:
+            - Sick Leave
+          description: The category of leave defined in XCD HRMS.
+          example: Sick Leave
+        xcdio__Employee_Details__c:
+          type: string
+          description: Salesforce record ID of the employee for whom the leave is to be booked.
+          example: a29Q1000000t6zFIAQ
+        xcdio__Start_Date__c:
+          type: string
+          format: date
+          description: Leave start date.
+          example: '2025-01-10'
+        xcdio__Start_Date_AM_PM_All_Day__c:
+          type: string
+          enum:
+            - AM
+            - PM
+            - All Day
+          description: Leave start slot.
+          example: All Day for a full day, or PM if the leave starts from the second half of the day.
+        xcdio__End_Date__c:
+          type: string
+          format: date
+          description: Leave end date.
+          example: '2025-01-10'
+        xcdio__End_Date_AM_PM_All_Day__c:
+          type: string
+          enum:
+            - AM
+            - PM
+            - All Day
+          description: Leave end slot.
+          example: All Day for a full day, or AM if the leave is until the first half of the day.
+        xcdio__Illness__c:
+          type: string
+          enum:
+            - Back & neck
+            - Chest & respiratory
+            - Covid-19 confirmed
+            - Covid-19 suspected
+            - Covid-19 self-isolating
+            - Diabetes
+            - Eyes, ear, nose, mouth
+            - Genito-urinary
+            - Heart
+            - Infection
+            - Musculo-skeletal
+            - Neurological
+            - Pregnancy
+            - Stomach
+            - Stress
+            - Other
+          description: Applicable for sickness only. The enum values may vary depending on client customizations.
+          example: Other
+        xcdio__Expected_return_to_work_date__c:
+          type: string
+          format: date
+          description: Expected reurn to work date. Applicable for sickness only.
+          example: '2025-01-10'
+        xcdio__Industrial_injury__c:
+          type: string
+          format: boolean
+          description: Industrial Injury. Applicable for sickness only.
+          example: false
+        xcdio__Number_of_days_of_holidays__c:
+          type: number
+          format: float
+          description: Leave duration in days. Mandatory while booking leave for an employee with Flexible Working Days or Irregular Shift Pattern with End Date populated.
+          example: 2.5
+        xcdio__Notes__c:
+          type: string
+          description: Leave Notes.
+    BookUnpaidLeaveRecordDetail:
+      type: object
+      required:
+        - xcdio__Leave_Category__c
+        - xcdio__Employee_Details__c
+        - xcdio__Start_Date__c
+      properties:
+        xcdio__Leave_Category__c:
+          type: string
+          enum:
+            - Unpaid Leave
+          description: The category of leave defined in XCD HRMS.
+          example: Unpaid Leave
+        xcdio__Employee_Details__c:
+          type: string
+          description: Salesforce record ID of the employee for whom the leave is to be booked.
+          example: a29Q1000000t6zFIAQ
+        xcdio__Start_Date__c:
+          type: string
+          format: date
+          description: Leave start date.
+          example: '2025-01-08'
+        xcdio__Start_Date_AM_PM_All_Day__c:
+          type: string
+          enum:
+            - AM
+            - PM
+            - All Day
+          description: Leave start slot.
+          default: All Day
+          example: All Day for a full day, or PM if the leave starts from the second half of the day.
+        xcdio__End_Date__c:
+          type: string
+          format: date
+          description: Leave end date.
+          example: '2025-01-10'
+        xcdio__End_Date_AM_PM_All_Day__c:
+          type: string
+          enum:
+            - AM
+            - PM
+            - All Day
+          description: Leave end slot.
+          default: All Day
+          example: All Day for a full day, or AM if the leave is until the first half of the day.
+        xcdio__Number_of_days_of_holidays__c:
+          type: number
+          format: float
+          description: Leave duration in days. Mandatory while booking leave for an employee with Flexible Working Days with End Date populated.
+          example: 2.5
+        xcdio__Hours_booked_hh__c:
+          type: integer
+          description: Hour part of Leave duartion measured in hours and minutes. Mandatory while booking leave for an employee with Irregular Shift Pattern with End Date populated.
+          example: 2
+        xcdio__mm__c:
+          type: string
+          enum:
+            - '00'
+            - '05'
+            - '10'
+            - '15'
+            - '20'
+            - '25'
+            - '30'
+            - '35'
+            - '40'
+            - '45'
+            - '50'
+            - '55'
+          description: Minute part of Leave duartion measured in hours and minutes. Mandatory while booking leave for an employee with Irregular Shift Pattern with End Date populated.
+          default: '00'
+          example: '30'
+        xcdio__Notes__c:
+          type: string
+          description: Leave Notes.
+          default: '---'
+    BookAppointmentFlexleaveLeaveRecordDetail:
+      type: object
+      required:
+        - xcdio__Leave_Category__c
+        - xcdio__Employee_Details__c
+        - xcdio__Date__c
+        - xcdio__Number_of_Holiday_Hours__c
+      properties:
+        xcdio__Leave_Category__c:
+          type: string
+          enum:
+            - Appointment
+            - Flex-leave
+          description: The category of leave defined in XCD HRMS.
+          example: Annual Leave
+        xcdio__Employee_Details__c:
+          type: string
+          description: Salesforce record ID of the employee for whom the leave is to be booked.
+          example: a29Q1000000t6zFIAQ
+        xcdio__Date__c:
+          type: string
+          format: date
+          description: Appointment/Flex-leave date.
+          example: '2025-01-08'
+        xcdio__AM_PM_All_Day__c:
+          type: string
+          enum:
+            - AM
+            - PM
+            - All Day
+          description: Leave start slot.
+          default: All Day
+          example: All Day for a full day, or PM if the leave starts from the second half of the day.
+        xcdio__Number_of_Holiday_Hours__c:
+          type: number
+          format: float
+          description: Appointment/Flex-leave duration in hours.
+          example: 2.5
+        xcdio__Notes__c:
+          type: string
+          description: Leave Notes.
+          default: '---'
+    BookParentalLeaveRecordDetail:
+      type: object
+      required:
+        - xcdio__Leave_Category__c
+        - xcdio__Employee_Details__c
+      properties:
+        xcdio__Leave_Category__c:
+          type: string
+          enum:
+            - Paternity
+            - Maternity
+            - Adoption
+            - Adoption Paternity
+            - Shared Parental
+            - Parental Bereavement
+          description: The category of leave defined in XCD HRMS.
+          example: Annual Leave
+        xcdio__Employee_Details__c:
+          type: string
+          description: Salesforce record ID of the employee for whom the leave is to be booked.
+          example: a29Q1000000t6zFIAQ
+        xcdio__Start_Date__c:
+          type: string
+          format: date
+          description: Leave start date.
+          example: '2025-01-08'
+        xcdio__End_Date__c:
+          type: string
+          format: date
+          description: Leave end date.
+          example: '2025-01-10'
+        xcdio__Birth_due_date__c:
+          type: string
+          format: date
+          description: Baby birth due date. Applicable for Paternity, Maternity and Shared Parental leaves.
+          example: '2025-01-08'
+        xcdio__Baby_born_date__c:
+          type: string
+          format: date
+          description: Baby birth date. Applicable for Paternity, Maternity and Shared Parental leaves.
+          example: '2025-01-10'
+        xcdio__Matching_date__c:
+          type: string
+          format: date
+          description: Applicable for Adoption, Adoption Paternity and Shared Parental leaves.
+          example: '2025-01-10'
+        xcdio__Expected_placement_date__c:
+          type: string
+          format: date
+          description: Applicable for Adoption, Adoption Paternity and Shared Parental leaves.
+          example: '2025-01-10'
+        xcdio__Placement_date__c:
+          type: string
+          format: date
+          description: Applicable for Adoption, Adoption Paternity and Shared Parental leaves.
+          example: '2025-01-10'
+        xcdio__Partners_name__c:
+          type: string
+          description: Holds the Partner's first name. Applicable for Shared Parental leaves only.
+          example: 'John'
+        xcdio__Partners_last_name__c:
+          type: string
+          description: Holds the Partner's last name. Applicable for Shared Parental leaves only.
+          example: 'Doe'
+        xcdio__Partners_middle_name__c:
+          type: string
+          description: Holds the Partner's middle name. Applicable for Shared Parental leaves only.
+          example: 'Henry'
+        xcdio__Partners_national_insurance_number__c:
+          type: string
+          description: Holds the Partner's first name. Applicable for Shared Parental leaves only.
+          example: 'JS123456B'
+        xcdio__Declaration_received_from_partner__c:
+         type: boolean
+         description: Applicable for Shared Parental leaves only.
+         example: true
+        xcdio__Bereavement_date__c:
+          type: string
+          format: date
+          description: Applicable for only Parental Bereavement leaves.
+          example: '2025-01-10'
+        xcdio__Notes__c:
+          type: string
+          description: Leave Notes.
+          default: '---'
           
     BookLeaveApiResponseSuccess:
       type: object
