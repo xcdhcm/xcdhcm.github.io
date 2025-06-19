@@ -1,0 +1,66 @@
+
+<html>
+  <head>
+    <script src="https://unpkg.com/swagger-ui-dist@3/swagger-ui-bundle.js"></script>
+    <script src="https://unpkg.com/swagger-ui-dist@3/swagger-ui-standalone-preset.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@3/swagger-ui.css" />
+    <title>XCD REST API</title>
+  </head>
+  <body>
+    <div id="swagger-ui"></div> 
+    <script defer>
+	
+		  const CurlPlugin = {
+		  statePlugins: {
+			configs: {
+			  updateCurlCommand: (curlCommand, { get }) => {
+				
+				const additionalSwitch = '-k'; // Replace with your desired switch
+				// Modify the cURL command to include the additional switch
+				return `${curlCommand} ${additionalSwitch}`;
+			  }
+			}
+		  }
+		};
+		
+      window.onload = function () {
+        const ui = SwaggerUIBundle({
+          url: 'https://xcddev.github.io/xcd-api-demo.yaml',
+          dom_id: "#swagger-ui",		  
+          presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
+		  explorer: false,
+		  layout: "BaseLayout",
+		  requestInterceptor: function(r) {
+          // Add your custom switch to the cURL command
+          r.curlOptions = r.curlOptions || {};
+          if (Array.isArray(r.curlOptions)) {
+			r.curlOptions.push("-k");
+			} else {
+			// If request.curlOptions is not an array, create a new array with the custom switch
+			//r.curlOptions = ["-k"];
+			r.curlOptions = ["-k "];
+			}
+          return r;
+			},
+			//oauth2RedirectUrl: 'https://yearendreg--ye22reg--c.sandbox.vf.force.com/resource/1715718498000/oauth2redirect',				
+			oauth2RedirectUrl: 'https://xcddev.w3spaces.com/oauth/oauth2-redirect.html',				
+			/*onComplete: () => {
+			const authButton = document.createElement("button");
+			authButton.textContent = "Initiate OAuth";
+			authButton.onclick = () => {
+			  const redirectUri = 'https://yearendreg--ye22reg--c.sandbox.vf.force.com/resource/1715718498000/oauth2redirect';
+			  ui.initOAuth({ clientId: '3MVG91LYYD8O4krRArs2l2r9GBLtMvZryzvoEXmb1sP0pvZQipYSmHRPfIJztREmJHREmeHyx3yFMvbe5ci8I', scopes: "api" });
+			  ui.initOAuth({ redirectUri });
+			};
+			document.body.appendChild(authButton);			
+		  }*/
+		  
+        });		
+		ui.initOAuth({ clientId: '3MVG9PwZx9R6_UreUI0BxdgyIb.wkHTvp52TcFMcQ_VyjvuHm5wNV0_u08zN7u8coSYvXm1cJZ6yjuzY91uko', scopes: "api" });
+		//ui.setURL("https://your-desired-base-url.com/api/v1");
+        window.ui = ui;	
+		window.ui.setURL('http://api.mydomain.loc:20109/v1');		
+      };
+    </script>   
+  </body>
+</html>
