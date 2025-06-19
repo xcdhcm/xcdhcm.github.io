@@ -41,19 +41,8 @@
 			r.curlOptions = ["-k "];
 			}
           return r;
-			},
-			//oauth2RedirectUrl: 'https://yearendreg--ye22reg--c.sandbox.vf.force.com/resource/1715718498000/oauth2redirect',				
-			oauth2RedirectUrl: 'https://xcddev.w3spaces.com/oauth/oauth2-redirect.html',				
-			/*onComplete: () => {
-			const authButton = document.createElement("button");
-			authButton.textContent = "Initiate OAuth";
-			authButton.onclick = () => {
-			  const redirectUri = 'https://yearendreg--ye22reg--c.sandbox.vf.force.com/resource/1715718498000/oauth2redirect';
-			  ui.initOAuth({ clientId: '3MVG91LYYD8O4krRArs2l2r9GBLtMvZryzvoEXmb1sP0pvZQipYSmHRPfIJztREmJHREmeHyx3yFMvbe5ci8I', scopes: "api" });
-			  ui.initOAuth({ redirectUri });
-			};
-			document.body.appendChild(authButton);			
-		  }*/
+			},						
+			oauth2RedirectUrl: '',							
 		  
         });		
 		ui.initOAuth({ clientId: '3MVG9PwZx9R6_UreUI0BxdgyIb.wkHTvp52TcFMcQ_VyjvuHm5wNV0_u08zN7u8coSYvXm1cJZ6yjuzY91uko', scopes: "api" });
